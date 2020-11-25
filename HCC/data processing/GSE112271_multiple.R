@@ -1,5 +1,4 @@
 #################################SCTransform And Integration#############################################################
-#BiocManager::install("scater")
 rm(list=ls())
 gc()
 library(Seurat)
