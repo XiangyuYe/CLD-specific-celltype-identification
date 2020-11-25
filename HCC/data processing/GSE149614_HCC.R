@@ -99,7 +99,7 @@ pdf(file = paste0(sc_path,"output/UMAP/UMAP",n_pca,resolution,".pdf"))
 DimPlot(my_sc,reduction = "umap",label = T)
 dev.off()
 
-table(my_sc@active.ident,my_sc$patients)#terrible batch effect
+table(my_sc@active.ident,my_sc$patients)
 
 ################################cell define################################
 DefaultAssay(my_sc)<-"RNA"
