@@ -16,11 +16,11 @@ sc_path2<-"/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE112271_mul
 load(paste0(sc_path1,"output/my_sc.RData"))
 my_sclist1<-SplitObject(my_sc,split.by = "patients")
 for (i in 1:length(my_sclist)) {
-  my_sclist1[[i]]<-SCTransform(my_sclist[[i]],verbose = T, variable.features.n=3000
-                              ,vars.to.regress = c("nCount_RNA"
-                                                   ,"percent.mt"),
-                              return.only.var.genes = F
-  )
+  my_sclist1[[i]]<-SCTransform(my_sclist[[i]],
+                               verbose = T, 
+                               variable.features.n=3000，
+                               vars.to.regress = c("nCount_RNA","percent.mt"),
+                               return.only.var.genes = F)
 }
 
 ###multile data
@@ -28,11 +28,11 @@ load(paste0(sc_path2,"output/my_sc.RData"))
 my_sclist2<-SplitObject(my_sc,split.by = "orig.ident")
 
 for (i in 1:length(my_sclist)) {
-  my_sclist2[[i]]<-SCTransform(my_sclist[[i]],verbose = T, variable.features.n=3000
-                              ,vars.to.regress = c("nCount_RNA"
-                                                   ,"percent.mt"),
-                              return.only.var.genes = F
-  )
+  my_sclist2[[i]]<-SCTransform(my_sclist[[i]],
+                               verbose = T, 
+                               variable.features.n=3000,
+                               vars.to.regress = c("nCount_RNA","percent.mt"),
+                               return.only.var.genes = F)
 }
 
 ###integrate
