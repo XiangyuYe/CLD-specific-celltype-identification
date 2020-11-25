@@ -39,11 +39,11 @@ table(my_sc$patients)
 ###Normalize and Scale
 my_sclist<-SplitObject(my_sc,split.by = "patients")
 for (i in 1:length(my_sclist)) {
-  my_sclist[[i]]<-SCTransform(my_sclist[[i]],verbose = T, variable.features.n=3000
-                              ,vars.to.regress = c("nCount_RNA"
-                                                   ,"percent.mt"),
-                              return.only.var.genes = F
-                              )
+  my_sclist[[i]]<-SCTransform(my_sclist[[i]],
+                              verbose = T, 
+                              variable.features.n=3000
+                              ,vars.to.regress = c("nCount_RNA","percent.mt"),
+                              return.only.var.genes = F)
 }
 
 my.features<-SelectIntegrationFeatures(object.list =my_sclist
