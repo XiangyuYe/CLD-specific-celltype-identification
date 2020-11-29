@@ -1,5 +1,6 @@
 ###########
 library(ggplot2)
+library(ggsci)
 library(patchwork)
 library(dplyr)
 rolypoly_path="/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/"
@@ -26,7 +27,8 @@ combin_output$annotation<-factor(combin_output$annotation,ordered = T,
 
 ###plot
 p<-ggplot(data=combin_output,aes(x=annotation,y=-log10(bp_value)))
-p<-p + geom_bar(aes(fill=Method),stat='identity',position = "dodge",width = 1,show.legend = T)#+
+p<-p + geom_bar(aes(fill=Method),stat='identity',position = "dodge",width = 1,show.legend = T)+
+  scale_fill_manual(values=c("#DC0000B2","#4DBBD5B2"))
 p<-p + geom_hline(yintercept = -log10(0.05),color="gold",lty=5,lwd=1)
 p<-p + labs(x= "cell types",y = "-log10(P value)")+
   scale_y_continuous(limits=c(0,2),breaks =c(seq(0,2,0.5)) ) +
