@@ -18,9 +18,10 @@ my_sclist1<-SplitObject(my_sc,split.by = "patients")
 for (i in 1:length(my_sclist)) {
   my_sclist1[[i]]<-SCTransform(my_sclist[[i]],
                                verbose = T, 
-                               variable.features.n=3000，
-                               vars.to.regress = c("nCount_RNA","percent.mt"),
-                               return.only.var.genes = F)
+                               variable.features.n=3000
+                              ,vars.to.regress = c("nCount_RNA","percent.mt"),
+                              return.only.var.genes = F
+  )
 }
 
 ###multile data
@@ -489,7 +490,7 @@ load(paste0(sc_path,"output/rolypoly/gene_retain.RData"))
 ###gene_retain
 counts_exp<-GetAssayData(my_sc,assay="RNA",slot="counts")
 gene_retain<-CreateAssayObject(counts=counts_exp,min.cells = 3)%>%rownames()
-
+save(gene_retain,file=paste0(sc_path,"output/rolypoly/gene_retain.RData"))
 ###RNA matrix
 RNA_exp<-GetAssayData(my_sc,assay="RNA",slot="data")[gene_retain,]%>%t()
 RNA_exp<-as.data.frame(RNA_exp)
@@ -519,6 +520,46 @@ exp_data<-t(exp_data)%>%as.data.frame
 cell_exp<-abs(exp_data)
 save(cell_exp,file = paste0(sc_path,"output/rolypoly/cell_exp.RData"))
 
+###sensitive analysis
+anno_data2<-anno_data
+anno_data2$Cluster<-as.character(anno_data2$Cluster)
+anno_data2$Cluster[anno_data2$Cluster%in%c("MDM","Kuffer")]<-"Macrophage"
+anno_data2$Cluster[anno_data2$Cluster%in%c("LEC","LSEC")]<-"Endothelial"
+anno_data2$Cluster[anno_data2$Cluster%in%c("Fibroblast","Mesenchyme")]<-"Mesenchymal"
+anno_data2$Cluster[anno_data2$Cluster%in%c("CD4+T","Treg","CD8+T")]<-"T"
+anno_data2$Cluster[anno_data2$Cluster%in%c("Plasma")]<-"B"
+anno_data2$Cluster[anno_data2$Cluster%in%c("NKT","cNK")]<-"NK"
+anno_data2$Cluster[anno_data2$Cluster%in%c("pDC","CLEC9A+DC")]<-"DC"
+anno_data2$Cluster[anno_data2$Cluster%in%c("Hepatocyte","Cholangiocyte")]<-"Epithelial"
+
+save(anno_data2,file = paste0(sc_path,"output/rolypoly/anno_data2.RData"))
+
+gene_retain<-CreateAssayObject(counts=counts_exp,min.cells = 3)%>%rownames()
+load(paste0(sc_path,"output/rolypoly/RNA_exp.RData"))
+
+gene_use<-intersect(as.character(gene_retain),
+                    colnames(RNA_exp))
+exp_data<-RNA_exp[,gene_use]
+anno_data<-anno_data2
+anno_data<-subset(anno_data,!anno_data$Cluster %in% c("undefined","Cyc","LSEC","Bud"))
+anno_data$Barcode<-as.character(anno_data$Barcode)
+anno_data$Cluster<-as.character(anno_data$Cluster)
+exp_data<-exp_data[anno_data$Barcode,]
+
+exp_data$Barcode<-rownames(exp_data)
+exp_data<-merge(exp_data,anno_data,by="Barcode")[,-1]
+#merge and aggregate with mean
+exp_data<-aggregate(exp_data[,1:(ncol(exp_data)-1)],
+                    list(type=exp_data$Cluster),
+                    mean)
+rownames(exp_data)<-exp_data[,1]
+exp_data<-exp_data[,-1]
+# scale
+exp_data<-scale(exp_data)
+exp_data<-t(exp_data)%>%as.data.frame
+
+cell_exp2<-abs(exp_data)
+save(cell_exp2,file = paste0(sc_path,"output/rolypoly/cell_exp2.RData"))
 
 ################################LDSC_cts input################################
 load(paste0(sc_path,"output/my_sc.RData"))
@@ -533,21 +574,18 @@ n_top<-nrow(my_sc_f)/10
 DefaultAssay(my_sc_f)<-"RNA"
 
 ###gene list
-all_clusters<-c("Epithelial","Macrophage","Endothelial","CD4+T","Mesenchyme","NK",
-                "Monocyte","CD8+T","DC","Plasma","Fibroblast",
-                "B","Treg")
+all_clusters<-unique(anno_data$Cluster)
 
-gene_set<-list()
+###gene list
+gene_set_findall<-FindAllMarkers(my_sc_f,
+                                 min.pct=0.001,only.pos=T,return.thresh=1,logfc.threshold=0)
+save(gene_set_findall,paste0(sc_path,"output/rolypoly/gene_set_findall.RData"))
+
 for (c in 1:length(all_clusters)) {
-  ident_x<-all_clusters[c]
-  ident_y<-setdiff(all_clusters,ident_x)
-  gene_set[[c]]<-FindMarkers(my_sc_f,ident.1=ident_x,
-                             ident.2=ident_y,
-                             logfc.threshold = 0,min.pct=0.001,
-                             only.pos = T)
+  gene_set_f<-subset(gene_set_findall,gene_set_findall$cluster==all_clusters[c])
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
-  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/gene_list_",c,".txt"),
+  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE112271_multiple/gene_list/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
 
@@ -567,3 +605,63 @@ path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_
 ldcts_data<-data.frame(all_clusters,path_list)
 write.table(ldcts_data,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/integrated_HCC_EAS_ldcts"),
             sep = " ",quote = F,col.names =F,row.names =F)
+
+
+###sensitive analysis
+load(paste0(sc_path,"output/rolypoly/gene_set_findall.RData"))
+all_clusters<-c("Epithelial","Macrophage","Endothelial","CD4+T","Mesenchyme","NK",
+                "Monocyte","CD8+T","DC","Plasma","Fibroblast",
+                "B","Treg")
+n_top<-nrow(my_sc_f)/20
+for (c in 1:length(all_clusters)) {
+  gene_set_f<-subset(gene_set_findall,gene_set_findall$cluster==all_clusters[c])
+  gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
+  gene_list<-rownames(gene_set_f)
+  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/sens/gene_list_",c,".txt"),
+              sep = "\t",quote = F,col.names =F,row.names =F)
+}
+
+###conrol list
+gene_coord_all<-read.table(file = "/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_coord/gene_coord_all2.txt",
+                           sep = "\t",header = T)
+gene_ctrl<-gene_coord_all$GENE
+write.table(gene_ctrl,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/sens/gene_list_0.txt"),
+            sep = "\t",quote = F,col.names =F,row.names =F)
+###ldcts
+path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/",
+                   1:length(all_clusters),
+                   "_,/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/0_"))
+
+ldcts_data<-data.frame(all_clusters,path_list)
+write.table(ldcts_data,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/sens/integrated_HCC_EAS_ldcts"),
+            sep = " ",quote = F,col.names =F,row.names =F)
+
+#####
+load(paste0(sc_path,"output/my_sc.RData"))
+load(paste0(sc_path,"output/rolypoly/anno_data2.RData"))
+load(paste0(sc_path,"output/rolypoly/block_annotation_all.RData"))
+anno_data2<-anno_data2[colnames(my_sc),]
+Idents(my_sc)<-anno_data2$Cluster
+my_sc_f<-my_sc[block_annotation$label,]
+
+# load(paste0(sc_path,"output/anno_data.RData"))
+my_sc_f<- subset(my_sc_f,
+                 cells=as.vector(anno_data2[!anno_data2$Cluster%in%c("undefined","Cyc"),1]))
+DefaultAssay(my_sc_f)<-"SCT"
+n_top<-nrow(my_sc_f)/20
+DefaultAssay(my_sc_f)<-"RNA"
+
+all_clusters<-unique(anno_data2$Cluster)
+
+gene_set_findall2<-FindAllMarkers(my_sc_f,
+                                 min.pct=0.001,only.pos=T,return.thresh=1,logfc.threshold=0)
+save(gene_set_findall2,file=paste0(sc_path,"output/rolypoly/gene_set_findall2.RData"))
+
+load(paste0(sc_path,"output/rolypoly/gene_set_findall2.RData"))
+for (c in 1:length(all_clusters)) {
+  gene_set_f<-subset(gene_set_findall2,gene_set_findall2$cluster==all_clusters[c]&gene_set_findall2$p_val_adj<0.05)
+  gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
+  gene_list<-rownames(gene_set_f)
+  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE149614_HCC/gene_list/sens/gene_list_",c,".txt"),
+              sep = "\t",quote = F,col.names =F,row.names =F)
+}
