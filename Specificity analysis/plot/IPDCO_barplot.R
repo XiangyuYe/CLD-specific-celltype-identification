@@ -1,6 +1,5 @@
 ###########
 library(ggplot2)
-library(ggsci)
 library(patchwork)
 library(dplyr)
 rolypoly_path="/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/"
@@ -27,19 +26,21 @@ combin_output$annotation<-factor(combin_output$annotation,ordered = T,
 
 ###plot
 p<-ggplot(data=combin_output,aes(x=annotation,y=-log10(bp_value)))
-p<-p + geom_bar(aes(fill=Method),stat='identity',position = "dodge",width = 1,show.legend = T)+
+p<-p + geom_bar(aes(fill=Method),stat='identity',position = position_dodge(0.8),width = 0.8,show.legend = T)+
   scale_fill_manual(values=c("#DC0000B2","#4DBBD5B2"))
-p<-p + geom_hline(yintercept = -log10(0.05),color="gold",lty=5,lwd=1)
+p<-p + geom_hline(yintercept = -log10(0.033),color="gold",lty=5,lwd=1)
 p<-p + labs(x= "cell types",y = "-log10(P value)")+
   scale_y_continuous(limits=c(0,2),breaks =c(seq(0,2,0.5)) ) +
   scale_x_discrete(breaks=combin_output$annotation,
-                   labels=combin_output$annotation)+coord_flip()
+                   labels=combin_output$annotation)+coord_flip()+
+  ggtitle("GSE157783")
 p1<-p+theme(panel.background=element_rect(fill = "white",color = "black"),
              legend.text=element_text(size = 15,color = "grey20"),
              legend.title=element_blank(),
              panel.grid=element_blank(),
              axis.title = element_text(size = 20,color = "black"),
-             axis.text = element_text(size = 15,color = "grey20") )
+             axis.text = element_text(size = 18,color = "grey20"),
+            plot.title = element_text(size=20,face = "bold",hjust = 0.5))
 
 
 ###plot out
