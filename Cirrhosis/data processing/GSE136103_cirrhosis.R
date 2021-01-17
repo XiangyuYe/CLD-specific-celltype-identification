@@ -5,7 +5,7 @@ library(Seurat)
 library(dplyr)
 library(scDblFinder)
 options(future.globals.maxSize=4000*1024^2)
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 sc_path<-(paste0(data_path,"single_cell_data/GSE136103_cirrhosis/cirrhosis/"))
 
 ###data input and QC
@@ -436,7 +436,7 @@ library("biomaRt")
 library(httr)
 set_config(config(ssl_verifypeer = 0L))
 ensembl <- useEnsembl(biomart = "genes", dataset = "hsapiens_gene_ensembl",GRCh = 37)
-ensembl_list<-read.table("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE136103_cirrhosis/cirrhosis/1_cd45+/genes.tsv"
+ensembl_list<-read.table("/home/integ_project/rolypoly/single_cell_data/GSE136103_cirrhosis/cirrhosis/1_cd45+/genes.tsv"
                          ,header = F,stringsAsFactors = F)
 gene_bp<-getBM(attributes = c("ensembl_gene_id","chromosome_name", "transcript_start","transcript_end","transcription_start_site","start_position","end_position","transcript_version"), 
                filters = "ensembl_gene_id", values = ensembl_list[,1], mart = ensembl)
@@ -455,8 +455,8 @@ gene_bp_filter<-gene_bp_filter[!duplicated(gene_bp_filter$external_gene_name), ]
 gene_coord_all<-gene_bp_filter[,c("external_gene_name","chromosome_name", "start_position","end_position")]
 colnames(gene_coord_all)<-c("GENE","CHR","START","END")
 rownames(gene_coord_all)<-gene_coord_all$GENE
-save(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/gene_coord_all.RData")
-write.table(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/gene_coord/gene_coord_all.txt",
+save(gene_coord_all,file = "/home/integ_project/LDSC_test/GSE136103_cirrhosis/gene_coord_all.RData")
+write.table(gene_coord_all,file = "/home/integ_project/LDSC_test/GSE136103_cirrhosis/gene_coord/gene_coord_all.txt",
             sep = "\t",quote = F,col.names = T,row.names = F)
 
 ###block_annotation
@@ -530,26 +530,26 @@ for (c in 1:length(all_clusters)) {
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
   write.table(gene_list,
-              file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/gene_list/EAS/gene_list_",c,".txt"),
+              file = paste0("/home/integ_project/LDSC_test/GSE136103_cirrhosis/gene_list/EAS/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
 
-gene_coord_all<-read.table(file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/gene_coord/gene_coord_all.txt",
+gene_coord_all<-read.table(file = "/home/integ_project/LDSC_test/GSE136103_cirrhosis/gene_coord/gene_coord_all.txt",
                            sep = "\t",header = T)
 ###conrol list
 gene_ctrl<-gene_coord_all$GENE
-write.table(gene_ctrl,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/gene_list/EAS/gene_list_0.txt"),
+write.table(gene_ctrl,file = paste0("/home/integ_project/LDSC_test/GSE136103_cirrhosis/gene_list/EAS/gene_list_0.txt"),
             sep = "\t",quote = F,col.names =F,row.names =F)
 
 ###ldcts
 all_clusters<-c("Endothelial","CD4+T","Monocyte","CD8+T","Hepatocyte","NK",
                 "B","Kuffer","NKT","DC","Mesenchymal","MDM","Plasma","Treg","LEC","pDC","LSEC")
-path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/ldsc_out/EAS/",
+path_list<-(paste0("/home/integ_project/LDSC_test/GSE136103_cirrhosis/ldsc_out/EAS/",
                    1:length(all_clusters),
-                   "_,/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/ldsc_out/EAS/0_"))
+                   "_,/home/integ_project/LDSC_test/GSE136103_cirrhosis/ldsc_out/EAS/0_"))
 
 Cirrhosis_ldcts<-data.frame(all_clusters,path_list)
-write.table(Cirrhosis_ldcts,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE136103_cirrhosis/GSE136103_cirrhosis_EAS_ldcts"),
+write.table(Cirrhosis_ldcts,file = paste0("/home/integ_project/LDSC_test/GSE136103_cirrhosis/GSE136103_cirrhosis_EAS_ldcts"),
             sep = " ",quote = F,col.names =F,row.names =F)
 
 
