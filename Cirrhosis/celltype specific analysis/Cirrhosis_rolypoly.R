@@ -6,7 +6,7 @@ library(dplyr)
 library(ggplot2)
 library(patchwork)
 
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 sc_path<-(paste0(data_path,"single_cell_data/GSE136103_cirrhosis/cirrhosis/"))
 
 ####rolling rolypoly#####
