@@ -2,8 +2,8 @@
 library(ggplot2)
 library(patchwork)
 library(dplyr)
-rolypoly_path="/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/"
-ldsc_path="/net/mulan/disk2/yasheng/test/LDSC_test/"
+rolypoly_path="/home/integ_project/rolypoly/single_cell_data/"
+ldsc_path="/home/integ_project/LDSC_test/"
 
 data_set<-"GSE157783_IPDCO"
 rolypoly_outpath<-paste0(rolypoly_path,data_set,"/output/rolypoly/rolypoly_HCC.txt")
@@ -44,11 +44,11 @@ p1<-p+theme(panel.background=element_rect(fill = "white",color = "black"),
 
 
 ###plot out
-pdf(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE157783_IPDCO/estimates_brain_HCC.pdf"),height = 9,width = 9)
+pdf(paste0("/home/integ_project/rolypoly/single_cell_data/GSE157783_IPDCO/estimates_brain_HCC.pdf"),height = 9,width = 9)
 p1
 dev.off()
 
-tiff(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE157783_IPDCO/estimates_brain_HCC.tiff"),
+tiff(paste0("/home/integ_project/rolypoly/single_cell_data/GSE157783_IPDCO/estimates_brain_HCC.tiff"),
      height = 9,width = 9, units = "in", res = 300,compression="lzw")
 p1
 dev.off()
