@@ -2,8 +2,8 @@
 library(ggplot2)
 library(patchwork)
 library(dplyr)
-rolypoly_path="/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/"
-ldsc_path="/net/mulan/disk2/yasheng/test/LDSC_test/"
+rolypoly_path="/home/integ_project/rolypoly/single_cell_data/"
+ldsc_path="/home/integ_project/LDSC_test/"
 
 ###EAS
 pop<-"EAS"
@@ -84,11 +84,11 @@ p2<-p+theme(panel.background=element_rect(fill = "white",color = "black"),
             plot.title = element_text(size = 20,face = "bold",hjust = 0.5))
 
 ###plot out
-pdf(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE136103_cirrhosis/estimates_cir.pdf"),height = 9,width = 12)
+pdf(paste0("/home/integ_project/rolypoly/single_cell_data/GSE136103_cirrhosis/estimates_cir.pdf"),height = 9,width = 12)
 p1+p2
 dev.off()
 
-tiff(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE136103_cirrhosis/estimates_cir.tiff"),
+tiff(paste0("/home/integ_project/rolypoly/single_cell_data/GSE136103_cirrhosis/estimates_cir.tiff"),
      height = 9,width = 12, units = "in", res = 300,compression="lzw")
 p1+p2
 dev.off()
