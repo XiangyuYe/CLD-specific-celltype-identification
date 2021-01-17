@@ -3,8 +3,8 @@ library(ggplot2)
 library(patchwork)
 library(dplyr)
 library(ggsci)
-rolypoly_path="/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/"
-ldsc_path="/net/mulan/disk2/yasheng/test/LDSC_test/"
+rolypoly_path="/home/integ_project/rolypoly/single_cell_data/"
+ldsc_path="/home/integ_project/LDSC_test/"
 
 data_set<-c("GSE149614_HCC","GSE112271_multiple","integrated_HCC")
 
@@ -123,12 +123,12 @@ p3<-p+theme(panel.background=element_rect(fill = "white",color = "black"),
 
 
 ###plot out
-pdf(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/integrated_HCC/estimates_HCC.pdf"),
+pdf(paste0("/home/integ_project/rolypoly/single_cell_data/integrated_HCC/estimates_HCC.pdf"),
     height = 9,width = 16)
 p1+p2+p3
 dev.off()
 
-tiff(paste0("/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/integrated_HCC/estimates_HCC.tiff"),
+tiff(paste0("/home/integ_project/rolypoly/single_cell_data/integrated_HCC/estimates_HCC.tiff"),
      height = 9,width = 16, units = "in", res = 300,compression="lzw")
 p1+p2+p3
 dev.off()
