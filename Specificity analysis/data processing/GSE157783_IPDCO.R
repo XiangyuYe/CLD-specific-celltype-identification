@@ -7,7 +7,7 @@ library(scDblFinder)
 library(bigreadr)
 
 options(future.globals.maxSize=4000*1024^2)
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 sc_path<-(paste0(data_path,"single_cell_data/GSE157783_IPDCO/"))
 
 my_counts<-fread2(paste0(sc_path,"matrix.tsv"))
@@ -33,8 +33,8 @@ gene_bp_filter<-gene_bp_filter[!duplicated(gene_bp_filter$external_gene_name), ]
 gene_coord_all<-gene_bp_filter[,c("external_gene_name","chromosome_name", "transcript_start","transcript_end")]
 colnames(gene_coord_all)<-c("GENE","CHR","START","END")
 rownames(gene_coord_all)<-gene_coord_all$GENE
-save(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/gene_coord_all.RData")
-write.table(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/gene_coord/gene_coord_all.txt",
+save(gene_coord_all,file = "/home/integ_project/LDSC_test/GSE157783_IPDCO/gene_coord_all.RData")
+write.table(gene_coord_all,file = "/home/integ_project/LDSC_test/GSE157783_IPDCO/gene_coord/gene_coord_all.txt",
             sep = "\t",quote = F,col.names = T,row.names = F)
 
 ###block_annotation
@@ -242,24 +242,24 @@ for (c in 1:length(all_clusters)) {
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
   write.table(gene_list,
-              file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/gene_list/gene_list_",c,".txt"),
+              file = paste0("/home/integ_project/LDSC_test/GSE157783_IPDCO/gene_list/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
 
-gene_coord_all<-read.table(file = "/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/gene_coord/gene_coord_all.txt",
+gene_coord_all<-read.table(file = "/home/integ_project/LDSC_test/GSE157783_IPDCO/gene_coord/gene_coord_all.txt",
                            sep = "\t",header = T)
 ###conrol list
 gene_ctrl<-gene_coord_all$GENE
-write.table(gene_ctrl,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/gene_list/gene_list_0.txt"),
+write.table(gene_ctrl,file = paste0("/home/integ_project/LDSC_test/GSE157783_IPDCO/gene_list/gene_list_0.txt"),
             sep = "\t",quote = F,col.names =F,row.names =F)
 
 ###ldcts
-path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/ldsc_out/EAS/",
+path_list<-(paste0("/home/integ_project/LDSC_test/GSE157783_IPDCO/ldsc_out/EAS/",
                    1:length(all_clusters),
-                   "_,/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/ldsc_out/EAS/0_"))
+                   "_,/home/integ_project/LDSC_test/GSE157783_IPDCO/ldsc_out/EAS/0_"))
 
 ldcts_data<-data.frame(all_clusters,path_list)
-write.table(ldcts_data,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE157783_IPDCO/GSE157783_IPDCO_EAS_ldcts"),
+write.table(ldcts_data,file = paste0("/home/integ_project/LDSC_test/GSE157783_IPDCO/GSE157783_IPDCO_EAS_ldcts"),
             sep = " ",quote = F,col.names =F,row.names =F)
 
       
