@@ -4,7 +4,7 @@ library(rolypoly)
 library(dplyr)
 library(ggplot2)
 library(patchwork)
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 
 ####rolling rolypoly#####
 GWAS_path<-(paste0(data_path,"GWAS_data/HCC/"))
