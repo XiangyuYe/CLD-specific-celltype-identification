@@ -4,7 +4,7 @@ gc()
 library(bigreadr)
 library(dplyr)
 
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 GWAS_path<-(paste0(data_path,"GWAS_data/Cirrhosis_EAS/"))
 
 
@@ -17,12 +17,12 @@ GWAS_data<-subset(GWAS_data,GWAS_data$maf>0.01)
 fwrite2(GWAS_data,file = paste0(GWAS_path,"GWAS_data.txt"))
 
 #output with rsID for LDSC processing
-rs_bim <- fread2("/net/mulan/disk2/yasheng/comparisonProject/09_external_LD/EAS/merge.bim")
+rs_bim <- fread2("/home/comparisonProject/EAS/merge.bim")
 dd <- merge(GWAS_data, rs_bim, by.x = c("CHR", "POS"), by.y = c("V1", "V4"))
 
 dd$rsID<-dd$V2
 rs_GWAS<-dd[,c("CHR","POS","rsID","Allele1","Allele2","N","BETA","SE","p.value","MAF")]
-write.table(rs_GWAS,file = "/net/mulan/disk2/yasheng/test/rolypoly/GWAS_data/Cirrhosis_EAS/rs_GWAS.txt",sep="\t",row.names = F,quote = F)
+write.table(rs_GWAS,file = "/home/integ_project/rolypoly/GWAS_data/Cirrhosis_EAS/rs_GWAS.txt",sep="\t",row.names = F,quote = F)
 
 ################HCC BBJ################
 rm(list = ls())
@@ -30,7 +30,7 @@ gc()
 library(bigreadr)
 library(dplyr)
 
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 GWAS_path<-(paste0(data_path,"GWAS_data/HCC/"))
 
 
@@ -43,19 +43,19 @@ GWAS_data<-subset(GWAS_data,GWAS_data$maf>0.01)
 fwrite2(GWAS_data,file = paste0(GWAS_path,"GWAS_data.txt"))
 
 #output with rsID for LDSC processing
-rs_bim <- fread2("/net/mulan/disk2/yasheng/comparisonProject/09_external_LD/EAS/merge.bim")
+rs_bim <- fread2("/home/comparisonProject/EAS/merge.bim")
 dd <- merge(GWAS_data, rs_bim, by.x = c("CHR", "POS"), by.y = c("V1", "V4"))
 
 dd$rsID<-dd$V2
 rs_GWAS<-dd[,c("CHR","POS","rsID","Allele1","Allele2","N","BETA","SE","p.value","MAF")]
-write.table(rs_GWAS,file = "/net/mulan/disk2/yasheng/test/rolypoly/GWAS_data/HCC/rs_GWAS.txt",sep="\t",row.names = F,quote = F)
+write.table(rs_GWAS,file = "/home/integ_project/rolypoly/GWAS_data/HCC/rs_GWAS.txt",sep="\t",row.names = F,quote = F)
 
 ################Cirrhosis Gene Atlas(GA################
 library(bigreadr)
 library(dplyr)
 library(data.table)
 
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
+data_path="/home/integ_project/rolypoly/"
 GWAS_path<-(paste0(data_path,"GWAS_data/Cirrhosis_EUR/"))
 
 GA_Cirrhosis<-data.frame()
