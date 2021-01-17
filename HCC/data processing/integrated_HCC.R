@@ -7,10 +7,10 @@ library(dplyr)
 library(scDblFinder)
 library(bigreadr)
 options(future.globals.maxSize=4000*1024^2)
-data_path="/net/mulan/disk2/yasheng/test/rolypoly/"
-sc_path<-"/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/integrated_HCC/"
-sc_path1<-"/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE149614_HCC/"
-sc_path2<-"/net/mulan/disk2/yasheng/test/rolypoly/single_cell_data/GSE112271_multiple/"
+data_path="/home/integ_project/rolypoly/"
+sc_path<-"/home/integ_project/rolypoly/single_cell_data/integrated_HCC/"
+sc_path1<-"/home/integ_project/rolypoly/single_cell_data/GSE149614_HCC/"
+sc_path2<-"/home/integ_project/rolypoly/single_cell_data/GSE112271_multiple/"
 
 ###TN data
 load(paste0(sc_path1,"output/my_sc.RData"))
@@ -462,13 +462,13 @@ save(anno_data,file = paste0(sc_path,"output/rolypoly/anno_data.RData"))
 save(my_sc,file = paste0(sc_path,"output/rolypoly/my_sc.RData"))
 ################################block annotation#################################
 load(paste0(sc_path,"output/my_sc.RData"))
-gene_coord1<-read.table("/net/mulan/disk2/yasheng/test/LDSC_test/GSE149614_HCC/gene_coord/gene_coord_all.txt",header = T)
-gene_coord2<-read.table("/net/mulan/disk2/yasheng/test/LDSC_test/GSE112271_multiple/gene_coord/gene_coord_all.txt",header = T)
+gene_coord1<-read.table("/home/integ_project/LDSC_test/GSE149614_HCC/gene_coord/gene_coord_all.txt",header = T)
+gene_coord2<-read.table("/home/integ_project/LDSC_test/GSE112271_multiple/gene_coord/gene_coord_all.txt",header = T)
 gene_coord_all<-rbind(gene_coord1,gene_coord2)
 gene_coord_all<-gene_coord_all[!duplicated(gene_coord_all$GENE), ]
 
-save(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_coord_all.RData")
-write.table(gene_coord_all,file = "/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_coord/gene_coord_all.txt",
+save(gene_coord_all,file = "/home/integ_project/LDSC_test/integrated_HCC/gene_coord_all.RData")
+write.table(gene_coord_all,file = "/home/integ_project/LDSC_test/integrated_HCC/gene_coord/gene_coord_all.txt",
             sep = "\t",quote = F,col.names = T,row.names = F)
 
 load(paste0(data_path,"single_cell_data/GSE149614_HCC/output/rolypoly/block_annotation_all.RData"))
@@ -585,25 +585,25 @@ for (c in 1:length(all_clusters)) {
   gene_set_f<-subset(gene_set_findall,gene_set_findall$cluster==all_clusters[c])
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
-  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE112271_multiple/gene_list/gene_list_",c,".txt"),
+  write.table(gene_list,file = paste0("/home/integ_project/LDSC_test/GSE112271_multiple/gene_list/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
 
 ###gene_ctrl
-gene_coord_all<-read.table(file = "/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_coord/gene_coord_all.txt",
+gene_coord_all<-read.table(file = "/home/integ_project/LDSC_test/integrated_HCC/gene_coord/gene_coord_all.txt",
                            sep = "\t",header = T)
 gene_ctrl<-gene_coord_all$GENE
-write.table(gene_ctrl,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/EAS/gene_list_0.txt"),
+write.table(gene_ctrl,file = paste0("/home/integ_project/LDSC_test/integrated_HCC/gene_list/EAS/gene_list_0.txt"),
             sep = "\t",quote = F,col.names =F,row.names =F)
 
 
 ###ldcts
-path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/",
+path_list<-(paste0("/home/integ_project/LDSC_test/integrated_HCC/ldsc_out/EAS/",
                    1:length(all_clusters),
-                   "_,/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/0_"))
+                   "_,/home/integ_project/LDSC_test/integrated_HCC/ldsc_out/EAS/0_"))
 
 ldcts_data<-data.frame(all_clusters,path_list)
-write.table(ldcts_data,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/integrated_HCC_EAS_ldcts"),
+write.table(ldcts_data,file = paste0("/home/integ_project/LDSC_test/integrated_HCC/integrated_HCC_EAS_ldcts"),
             sep = " ",quote = F,col.names =F,row.names =F)
 
 
@@ -617,23 +617,23 @@ for (c in 1:length(all_clusters)) {
   gene_set_f<-subset(gene_set_findall,gene_set_findall$cluster==all_clusters[c])
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
-  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/sens/gene_list_",c,".txt"),
+  write.table(gene_list,file = paste0("/home/integ_project/LDSC_test/integrated_HCC/gene_list/sens/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
 
 ###conrol list
-gene_coord_all<-read.table(file = "/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_coord/gene_coord_all2.txt",
+gene_coord_all<-read.table(file = "/home/integ_project/LDSC_test/integrated_HCC/gene_coord/gene_coord_all2.txt",
                            sep = "\t",header = T)
 gene_ctrl<-gene_coord_all$GENE
-write.table(gene_ctrl,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/gene_list/sens/gene_list_0.txt"),
+write.table(gene_ctrl,file = paste0("/home/integ_project/LDSC_test/integrated_HCC/gene_list/sens/gene_list_0.txt"),
             sep = "\t",quote = F,col.names =F,row.names =F)
 ###ldcts
-path_list<-(paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/",
+path_list<-(paste0("/home/integ_project/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/",
                    1:length(all_clusters),
-                   "_,/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/0_"))
+                   "_,/home/integ_project/LDSC_test/integrated_HCC/ldsc_out/EAS/sens/0_"))
 
 ldcts_data<-data.frame(all_clusters,path_list)
-write.table(ldcts_data,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/integrated_HCC/sens/integrated_HCC_EAS_ldcts"),
+write.table(ldcts_data,file = paste0("/home/integ_project/LDSC_test/integrated_HCC/sens/integrated_HCC_EAS_ldcts"),
             sep = " ",quote = F,col.names =F,row.names =F)
 
 #####
@@ -662,6 +662,6 @@ for (c in 1:length(all_clusters)) {
   gene_set_f<-subset(gene_set_findall2,gene_set_findall2$cluster==all_clusters[c]&gene_set_findall2$p_val_adj<0.05)
   gene_set_f<-gene_set[[c]]%>%top_n(n=-n_top,wt=p_val)
   gene_list<-rownames(gene_set_f)
-  write.table(gene_list,file = paste0("/net/mulan/disk2/yasheng/test/LDSC_test/GSE149614_HCC/gene_list/sens/gene_list_",c,".txt"),
+  write.table(gene_list,file = paste0("/home/integ_project/LDSC_test/GSE149614_HCC/gene_list/sens/gene_list_",c,".txt"),
               sep = "\t",quote = F,col.names =F,row.names =F)
 }
