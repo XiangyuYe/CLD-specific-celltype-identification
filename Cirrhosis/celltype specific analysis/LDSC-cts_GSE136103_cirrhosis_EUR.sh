@@ -11,7 +11,7 @@ pop=EUR
 
 
 #data path
-data_path=/net/mulan/disk2/yasheng/test/LDSC_test/
+data_path=/home/integ_project/LDSC_test/
 
 gs_path=${data_path}${sc_data}/gene_list/
 gc_path=${data_path}${sc_data}/gene_coord/
@@ -20,8 +20,8 @@ hmp_path=${data_path}hapmap3_snps/
 ldsc_outpath=${data_path}${sc_data}/ldsc_out/${pop}/
 
 #software
-ldsc=/net/mulan/home/yasheng/comparisonProject/program/ldsc/ldsc.py
-mk_annot=/net/mulan/home/yasheng/comparisonProject/program/ldsc/make_annot.py
+ldsc=/home/comparisonProject/program/ldsc/ldsc.py
+mk_annot=/home/comparisonProject/program/ldsc/make_annot.py
 
 source activate ldsc
 
@@ -57,7 +57,7 @@ done
 done
 
 #GWAS 
-GWAS_input=/net/mulan/disk2/yasheng/test/rolypoly/GWAS_data/${pheno}_${pop}/
+GWAS_input=/home/integ_project/rolypoly/GWAS_data/${pheno}_${pop}/
 GWAS_output=${data_path}GWAS_path/
 python2 ${munge_sumstats} \
 		--sumstats ${GWAS_input}rs_GWAS.txt \
